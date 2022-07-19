@@ -1,0 +1,70 @@
+var PubNub = require('pubnub');
+var pubnub = new PubNub({
+   publish_key   : "pub...",
+   subscribe_key : "sub..."
+});
+var five = require('johnny-five');
+var board = new five.Board();
+
+var LED3_RED;
+var LED3_GREEN;    
+var LED3_BLUE;
+
+var LED2_RED;     
+var LED2_GREEN;    
+var LED2_BLUE;     
+
+var LED1_RED;      
+var LED1_GREEN;    
+var LED1_BLUE;     
+
+board.on("ready", function(){      
+       LED3_RED = new five.Led(2);
+       LED3_GREEN = new five.Led(4);
+       LED3_BLUE = new five.Led(3);
+
+       LED2_RED = new five.Led(5);
+       LED2_GREEN = new five.Led(7);
+       LED2_BLUE = new five.Led(6);
+
+       LED1_RED = new five.Led(8);
+       LED1_GREEN = new five.Led(10);
+       LED1_BLUE = new five.Led(9);
+});
+
+pubnub.addListener({
+   status: function(statusEvent) {},
+   message: function(msg) {
+       var action = msg.message.action;
+       if (action == 1){
+           LED3_RED.on();
+           LED3_GREEN.on();
+           LED3_BLUE.on();
+
+           LED2_RED.on();
+           LED2_GREEN.on();
+           LED2_BLUE.on();
+
+           LED1_RED.on();
+           LED1_GREEN.on();
+           LED1_BLUE.on();
+       } else {
+           LED3_RED.off();
+           LED3_GREEN.off();
+           LED3_BLUE.off();
+
+           LED2_RED.off();
+           LED2_GREEN.off();
+           LED2_BLUE.off();
+
+           LED1_RED.off();
+           LED1_GREEN.off();
+           LED1_BLUE.off();
+       }
+   },
+   presence: function(presenceEvent) {}
+});
+
+pubnub.subscribe({
+   channels: ['flutter_iot_lamp']
+});
